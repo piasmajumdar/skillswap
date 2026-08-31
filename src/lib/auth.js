@@ -12,6 +12,12 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google"],
+    },
+  },
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID || "",
@@ -22,19 +28,24 @@ export const auth = betterAuth({
     additionalFields: {
       role: {
         type: "string",
-        default: "client",
+        required: false,
+        defaultValue: "client",
       },
+
       skills: {
         type: "string",
         required: false,
       },
+
       bio: {
         type: "string",
         required: false,
       },
+
       isBlocked: {
         type: "boolean",
-        default: false,
+        required: false,
+        defaultValue: false,
       },
     },
   },

@@ -60,6 +60,7 @@ const Navbar = async () => {
                                                             <Image
                                                                 src="/logo.png"
                                                                 alt="SkillSwap"
+                                                                sizes="32px"
                                                                 fill
                                                                 className="object-contain"
                                                             />
@@ -121,20 +122,7 @@ const Navbar = async () => {
                                                             </Button>
                                                         </li>
 
-                                                        <li>
-                                                            <Button
-                                                                slot="close"
-                                                                variant="light"
-                                                                className="w-full justify-start"
-                                                            >
-                                                                <NavLink
-                                                                    href="/auth/login"
-                                                                    className="w-full"
-                                                                >
-                                                                    Login
-                                                                </NavLink>
-                                                            </Button>
-                                                        </li>
+                                                       
 
                                                     </ul>
                                                 </nav>

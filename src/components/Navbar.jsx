@@ -156,6 +156,7 @@ const Navbar = async () => {
                                 <Image
                                     src="/logo.png"
                                     alt="SkillSwap Logo"
+                                    sizes="36px"
                                     fill
                                     priority
                                     className="object-contain"

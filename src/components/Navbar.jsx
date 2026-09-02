@@ -15,11 +15,11 @@ const Navbar = async () => {
             </li>
 
             <li>
-                <NavLink href="/browse-tasks">Browse Tasks</NavLink>
+                <NavLink href="/tasks">Browse Tasks</NavLink>
             </li>
 
             <li>
-                <NavLink href="/browse-freelancers">
+                <NavLink href="/freelancers">
                     Browse Freelancers
                 </NavLink>
             </li>
@@ -99,7 +99,7 @@ const Navbar = async () => {
                                                                 className="w-full justify-start"
                                                             >
                                                                 <NavLink
-                                                                    href="/browse-tasks"
+                                                                    href="/tasks"
                                                                     className="w-full"
                                                                 >
                                                                     Browse Tasks
@@ -114,7 +114,7 @@ const Navbar = async () => {
                                                                 className="w-full justify-start"
                                                             >
                                                                 <NavLink
-                                                                    href="/browse-freelancers"
+                                                                    href="/freelancers"
                                                                     className="w-full"
                                                                 >
                                                                     Browse Freelancers

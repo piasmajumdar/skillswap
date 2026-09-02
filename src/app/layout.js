@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Bounce, ToastContainer } from "react-toastify";
 import NextThemeProvider from "@/providers/NextThemeProvider";
+import Footer from "@/components/Footer";
 
 export const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
           <main className="flex-1 flex flex-col">
             {children}
           </main>
+          <Footer />
         </NextThemeProvider>
 
         <ToastContainer

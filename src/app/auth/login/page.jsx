@@ -51,7 +51,7 @@ const LoginPage = () => {
                 email: email.trim(),
                 password,
                 rememberMe,
-                callbackURL: "/",
+                // callbackURL: "/", --> Redirecting manually, it's not needed
             });
 
             if (error) {
@@ -62,9 +62,18 @@ const LoginPage = () => {
             }
 
             if (data) {
+                console.log(data.user.role)
                 toast.success("Signed in successfully!");
-
-                router.push("/");
+                console.log(data);
+                if (data.user.role === "freelancer") {
+                    router.push("/dashboard/freelancer");
+                }
+                else if (data.user.role === "admin") {
+                    router.push("/dashboard/admin");
+                }
+                else {
+                    router.push('/')
+                }
                 router.refresh();
             }
         } catch (error) {
@@ -88,7 +97,7 @@ const LoginPage = () => {
 
             await authClient.signIn.social({
                 provider: "google",
-                callbackURL: "/",
+                callbackURL: "/dashboard/client",
             });
         } catch (error) {
             console.error(error);

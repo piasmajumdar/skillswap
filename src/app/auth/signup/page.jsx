@@ -72,7 +72,7 @@ const SignupPage = () => {
                     password: password,
                     image: photo?.trim() || undefined,
                     role: role,
-                    callbackURL: "/",
+                    // callbackURL: "/",
                     skills: role === "freelancer" ? skills?.trim() : undefined,
                     bio: role === "freelancer" ? bio?.trim() : undefined,
                     isBlocked: false,
@@ -91,10 +91,14 @@ const SignupPage = () => {
                     "Account created successfully!"
                 );
 
-                if (role === "freelancer") {
+                if (data.user.role === "freelancer") {
                     router.push("/dashboard/freelancer");
-                } else {
-                    router.push("/");
+                }
+                else if (data.user.role === "admin") {
+                    router.push("/dashboard/admin");
+                }
+                else {
+                    router.push('/')
                 }
 
                 router.refresh();
@@ -121,7 +125,7 @@ const SignupPage = () => {
             // Google users are always Clients.
             await authClient.signIn.social({
                 provider: "google",
-                callbackURL: "/",
+                callbackURL: "/dashboard/client",
             });
         } catch (error) {
             console.error(error);

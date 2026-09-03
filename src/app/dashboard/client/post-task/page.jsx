@@ -23,6 +23,7 @@ export default function PostTaskPage() {
         method: "POST",
         body: JSON.stringify({
           ...values,
+          category: String(values.category).trim().toLowerCase(),
           budget: Number(values.budget),
           client_email: session.user.email,
         }),
@@ -70,11 +71,21 @@ export default function PostTaskPage() {
         <div className="grid gap-5 sm:grid-cols-2">
           <label className="grid gap-2 text-sm font-semibold">
             Category
-            <input
+            <select
               required
               name="category"
-              className="rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none focus:border-indigo-500"
-            />
+              defaultValue=""
+              className="cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-3 font-normal outline-none focus:border-indigo-500"
+            >
+              <option value="" disabled>
+                Select a category
+              </option>
+              <option value="design">Design</option>
+              <option value="writing">Writing</option>
+              <option value="development">Development</option>
+              <option value="marketing">Marketing</option>
+              <option value="other">Other</option>
+            </select>
           </label>
           <label className="grid gap-2 text-sm font-semibold">
             Budget (USD)

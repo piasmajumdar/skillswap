@@ -30,6 +30,7 @@ const navigation = {
     ["Post a Task", "/dashboard/client/post-task", FiPlus],
     ["My Tasks", "/dashboard/client/my-tasks", FiList],
     ["Manage Proposals", "/dashboard/client/proposals", FiFileText],
+    ["Payments History", "/dashboard/client/payments-history", FiFileText],
     ["Edit Profile", "/dashboard/client/profile", FiUser],
   ],
 

@@ -101,19 +101,16 @@ export default function TaskDetailsPage() {
     setLoading(true);
     try {
       const result = await clientApi(
-        "/api/client/proposals/" + proposalId + "/accept",
+        "/api/client/payments/create-checkout-session",
         {
           method: "POST",
-          body: JSON.stringify({ client_email: session.user.email }),
+          body: JSON.stringify({
+            proposalId,
+            client_email: session.user.email,
+          }),
         },
       );
-      toast.success("Proposal accepted. Continue to payment.");
-      router.push(
-        "/payment/checkout?proposalId=" +
-          result.proposalId +
-          "&amount=" +
-          result.amount,
-      );
+      window.location.assign(result.url);
     } catch (e) {
       setError(e.message);
       toast.error(e.message);

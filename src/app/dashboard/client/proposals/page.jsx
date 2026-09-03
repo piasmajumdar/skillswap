@@ -43,14 +43,17 @@ export default function ProposalsPage() {
   }
   async function accept(id) {
     try {
-      const result = await clientApi(`/api/client/proposals/${id}/accept`, {
-        method: "POST",
-        body: JSON.stringify({ client_email: session.user.email }),
-      });
-      toast.success("Proposal accepted. Continue to payment.");
-      router.push(
-        `/payment/checkout?proposalId=${result.proposalId}&amount=${result.amount}`,
+      const result = await clientApi(
+        "/api/client/payments/create-checkout-session",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            proposalId: id,
+            client_email: session.user.email,
+          }),
+        },
       );
+      window.location.assign(result.url);
     } catch (e) {
       setError(e.message);
     }

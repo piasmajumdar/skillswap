@@ -144,43 +144,43 @@ export default function MyTasksPage() {
           ) : (
             <article
               key={task._id}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-blue-200 hover:scale-101"
             >
-              <div className="flex flex-wrap justify-between gap-3">
-                <div>
-                  <Link
-                    href={`/dashboard/client/tasks/${task._id}`}
-                    className="font-semibold text-slate-900 hover:text-indigo-600"
-                  >
-                    {task.title}
-                  </Link>
-                  <p className="mt-1 text-sm text-slate-500">
-                    {task.category} · ${task.budget} · Deadline{" "}
-                    {String(task.deadline).slice(0, 10)}
-                  </p>
+              <Link href={`/dashboard/client/tasks/${task._id}`}>
+                <div className="flex flex-wrap justify-between gap-3">
+                  <div>
+                    <div
+                      className="font-semibold text-slate-900 hover:text-indigo-600"
+                    >
+                      {task.title}
+                    </div>
+                    <p className="mt-1 text-sm text-slate-500">
+                      {task.category} · ${task.budget} · Deadline{" "}
+                      {String(task.deadline).slice(0, 10)}
+                    </p>
+                  </div>
+                  <span className="h-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize">
+                    {label(task.status)}
+                  </span>
                 </div>
-                <span className="h-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize">
-                  {label(task.status)}
-                </span>
-              </div>
-              <p className="mt-3 text-sm text-slate-600">{task.description}</p>
-              {task.status === "open" && (
-                <div className="mt-4 flex gap-2">
-                  <button
-                    onClick={() => setEditing(String(task._id))}
-                    className="cursor-pointer rounded-lg border px-3 py-2 text-sm font-semibold"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => setDeleteTask(task)}
-                    className="cursor-pointer rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-600"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
-            </article>
+                <p className="mt-3 text-sm text-slate-600">{task.description}</p>
+                {task.status === "open" && (
+                  <div className="mt-4 flex gap-2">
+                    <button
+                      onClick={() => setEditing(String(task._id))}
+                      className="cursor-pointer rounded-lg border px-3 py-2 text-sm font-semibold"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => setDeleteTask(task)}
+                      className="cursor-pointer rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-600"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </Link></article>
           ),
         )}
         {!tasks.length && (
@@ -199,6 +199,6 @@ export default function MyTasksPage() {
         onClose={() => setDeleteTask(null)}
         onConfirm={() => remove(deleteTask._id)}
       />
-    </section>
+    </section >
   );
 }

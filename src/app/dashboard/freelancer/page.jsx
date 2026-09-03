@@ -85,7 +85,7 @@ export default function FreelancerDashboard() {
             </p>
           </div>
           <Link
-            href="/dashboard/freelancer/browse-tasks"
+            href="/tasks"
             className="inline-flex items-center justify-center rounded-full bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700"
           >
             Browse Tasks

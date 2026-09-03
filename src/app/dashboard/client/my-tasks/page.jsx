@@ -1,8 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
 import { clientApi, withEmail } from "../../components/clientApi";
+import ConfirmModal from "../../components/ConfirmModal";
 
 const label = (value) => String(value || "open").replace(/_/g, " ");
 export default function MyTasksPage() {
@@ -11,6 +14,8 @@ export default function MyTasksPage() {
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState("");
   const [editing, setEditing] = useState(null);
+  const [deleteTask, setDeleteTask] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const load = () =>
     session?.user?.email &&
     clientApi(`/api/client/tasks?email=${withEmail(session.user.email)}`)
@@ -23,7 +28,7 @@ export default function MyTasksPage() {
         .catch((e) => setError(e.message));
   }, [session]);
   async function remove(id) {
-    if (!window.confirm("Delete this open task?")) return;
+    setDeleting(true);
     try {
       await clientApi(
         `/api/client/tasks/${id}?email=${withEmail(session.user.email)}`,
@@ -32,8 +37,13 @@ export default function MyTasksPage() {
       await clientApi(
         `/api/client/tasks?email=${withEmail(session.user.email)}`,
       ).then(setTasks);
+      setDeleteTask(null);
+      toast.success("Task deleted successfully.");
     } catch (e) {
       setError(e.message);
+      toast.error(e.message);
+    } finally {
+      setDeleting(false);
     }
   }
   async function save(event, id) {
@@ -49,6 +59,7 @@ export default function MyTasksPage() {
         }),
       });
       setEditing(null);
+      toast.success("Task updated successfully.");
       await clientApi(
         `/api/client/tasks?email=${withEmail(session.user.email)}`,
       ).then(setTasks);
@@ -137,7 +148,12 @@ export default function MyTasksPage() {
             >
               <div className="flex flex-wrap justify-between gap-3">
                 <div>
-                  <h2 className="font-semibold text-slate-900">{task.title}</h2>
+                  <Link
+                    href={`/dashboard/client/tasks/${task._id}`}
+                    className="font-semibold text-slate-900 hover:text-indigo-600"
+                  >
+                    {task.title}
+                  </Link>
                   <p className="mt-1 text-sm text-slate-500">
                     {task.category} · ${task.budget} · Deadline{" "}
                     {String(task.deadline).slice(0, 10)}
@@ -152,13 +168,13 @@ export default function MyTasksPage() {
                 <div className="mt-4 flex gap-2">
                   <button
                     onClick={() => setEditing(String(task._id))}
-                    className="rounded-lg border px-3 py-2 text-sm font-semibold"
+                    className="cursor-pointer rounded-lg border px-3 py-2 text-sm font-semibold"
                   >
                     Edit
                   </button>
                   <button
-                    onClick={() => remove(task._id)}
-                    className="rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-600"
+                    onClick={() => setDeleteTask(task)}
+                    className="cursor-pointer rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-600"
                   >
                     Delete
                   </button>
@@ -173,6 +189,16 @@ export default function MyTasksPage() {
           </p>
         )}
       </div>
+      <ConfirmModal
+        open={Boolean(deleteTask)}
+        title="Delete this task?"
+        description="This permanently removes the open task and its pending proposals."
+        confirmLabel="Delete Task"
+        danger
+        loading={deleting}
+        onClose={() => setDeleteTask(null)}
+        onConfirm={() => remove(deleteTask._id)}
+      />
     </section>
   );
 }

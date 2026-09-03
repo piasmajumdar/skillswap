@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
 import { clientApi } from "../../components/clientApi";
 
 export default function PostTaskPage() {
@@ -26,9 +27,11 @@ export default function PostTaskPage() {
           client_email: session.user.email,
         }),
       });
+      toast.success("Task posted successfully.");
       router.push("/dashboard/client/my-tasks");
     } catch (e) {
       setError(e.message);
+      toast.error(e.message);
     } finally {
       setSaving(false);
     }
@@ -95,7 +98,7 @@ export default function PostTaskPage() {
         </label>
         <button
           disabled={saving}
-          className="rounded-xl bg-indigo-600 px-5 py-3 font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
+          className="cursor-pointer rounded-xl bg-indigo-600 px-5 py-3 font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {saving ? "Publishing..." : "Publish Task"}
         </button>

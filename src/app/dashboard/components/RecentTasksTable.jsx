@@ -11,7 +11,9 @@ const statusStyles = {
 };
 
 const normalizeStatus = (status) => {
-  return String(status || "open").trim().toLowerCase();
+  return String(status || "open")
+    .trim()
+    .toLowerCase();
 };
 
 const formatDate = (value) => {
@@ -102,9 +104,12 @@ const RecentTasksTable = ({
                 >
                   <td className="px-5 py-4 sm:px-6">
                     <div className="min-w-0">
-                      <p className="truncate font-semibold text-slate-900">
+                      <Link
+                        href={`/dashboard/client/tasks/${task.id}`}
+                        className="truncate font-semibold text-slate-900 hover:text-indigo-600"
+                      >
                         {task.title}
-                      </p>
+                      </Link>
                       <p className="mt-1 text-sm text-slate-500">
                         {task.category}
                       </p>

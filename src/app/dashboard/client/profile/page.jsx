@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
 import { clientApi, withEmail } from "../../components/clientApi";
 
 export default function ProfilePage() {
@@ -21,8 +22,10 @@ export default function ProfilePage() {
         body: JSON.stringify({ ...form, email: session.user.email }),
       });
       setMessage("Profile updated successfully.");
+      toast.success("Profile updated successfully.");
     } catch (e) {
       setMessage(e.message);
+      toast.error(e.message);
     }
   }
   return (
@@ -52,7 +55,7 @@ export default function ProfilePage() {
           />
         </label>
         <p className="text-sm text-slate-500">Email: {session?.user?.email}</p>
-        <button className="rounded-xl bg-indigo-600 px-5 py-3 font-semibold text-white">
+        <button className="cursor-pointer rounded-xl bg-indigo-600 px-5 py-3 font-semibold text-white">
           Save Changes
         </button>
       </form>

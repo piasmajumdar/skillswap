@@ -2,13 +2,17 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
 import { clientApi, withEmail } from "../../components/clientApi";
+import ConfirmModal from "../../components/ConfirmModal";
 
 export default function ProposalsPage() {
   const router = useRouter();
   const { data: session } = authClient.useSession();
   const [rows, setRows] = useState([]);
   const [error, setError] = useState("");
+  const [selectedAction, setSelectedAction] = useState(null);
+  const [actionLoading, setActionLoading] = useState(false);
   const load = () =>
     session?.user?.email &&
     clientApi(`/api/client/proposals?email=${withEmail(session.user.email)}`)
@@ -21,14 +25,20 @@ export default function ProposalsPage() {
         .catch((e) => setError(e.message));
   }, [session]);
   async function reject(id) {
+    setActionLoading(true);
     try {
       await clientApi(`/api/client/proposals/${id}/reject`, {
         method: "PATCH",
         body: JSON.stringify({ client_email: session.user.email }),
       });
+      toast.success("Proposal rejected.");
       load();
+      setSelectedAction(null);
     } catch (e) {
       setError(e.message);
+      toast.error(e.message);
+    } finally {
+      setActionLoading(false);
     }
   }
   async function accept(id) {
@@ -37,6 +47,7 @@ export default function ProposalsPage() {
         method: "POST",
         body: JSON.stringify({ client_email: session.user.email }),
       });
+      toast.success("Proposal accepted. Continue to payment.");
       router.push(
         `/payment/checkout?proposalId=${result.proposalId}&amount=${result.amount}`,
       );
@@ -72,7 +83,7 @@ export default function ProposalsPage() {
                   {row.freelancer?.name || row.freelancer_email}
                 </h2>
               </div>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize">
+              <span className="inline-flex min-w-24 items-center justify-center rounded-full bg-slate-100 px-3 py-1 text-center text-xs font-semibold capitalize">
                 {String(row.status).replace(/_/g, " ")}
               </span>
             </div>
@@ -86,14 +97,18 @@ export default function ProposalsPage() {
               {row.status === "pending" && (
                 <div className="flex gap-2">
                   <button
-                    onClick={() => reject(row._id)}
-                    className="rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-600"
+                    onClick={() =>
+                      setSelectedAction({ type: "reject", id: row._id })
+                    }
+                    className="cursor-pointer rounded-lg border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-600"
                   >
                     Reject
                   </button>
                   <button
-                    onClick={() => accept(row._id)}
-                    className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white"
+                    onClick={() =>
+                      setSelectedAction({ type: "accept", id: row._id })
+                    }
+                    className="cursor-pointer rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white"
                   >
                     Accept & Pay
                   </button>
@@ -108,6 +123,28 @@ export default function ProposalsPage() {
           </p>
         )}
       </div>
+      <ConfirmModal
+        open={Boolean(selectedAction)}
+        title={
+          selectedAction?.type === "reject"
+            ? "Reject this proposal?"
+            : "Accept this proposal?"
+        }
+        description={
+          selectedAction?.type === "reject"
+            ? "The freelancer will no longer be considered for this task."
+            : "You will continue to checkout to pay the freelancer."
+        }
+        confirmLabel={selectedAction?.type === "reject" ? "Reject" : "Continue"}
+        danger={selectedAction?.type === "reject"}
+        loading={actionLoading}
+        onClose={() => setSelectedAction(null)}
+        onConfirm={() =>
+          selectedAction?.type === "reject"
+            ? reject(selectedAction.id)
+            : accept(selectedAction.id)
+        }
+      />
     </section>
   );
 }

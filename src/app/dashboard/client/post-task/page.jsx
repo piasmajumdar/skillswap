@@ -1,11 +1,11 @@
 import React from 'react';
 
-const ClientPage = () => {
+const PostTaskPage = () => {
     return (
         <div>
-            Hi
+            Post Task
         </div>
     );
 };
 
-export default ClientPage;
+export default PostTaskPage;

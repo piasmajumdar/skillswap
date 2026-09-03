@@ -2,13 +2,13 @@ import DashboardSidebar from "./components/DashboardSidebar";
 
 export default function DashboardLayout({ children }) {
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="flex min-h-screen bg-slate-50 dark:bg-black">
 
             {/* Dashboard Sidebar */}
             <DashboardSidebar />
 
             {/* Dashboard Content */}
-            <main className="min-h-screen md:ml-[260px]">
+            <main className="min-w-0 flex-1">
 
                 {/* Space for mobile top bar */}
                 <div className="h-16 md:hidden" />

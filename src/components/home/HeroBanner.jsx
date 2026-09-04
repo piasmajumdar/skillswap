@@ -72,7 +72,7 @@ export default function HeroBanner() {
         sizes="(max-width: 768px) 100vw, 1200px"
         className="-z-20 object-cover object-right"
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#f7f7ff] via-[#f7f7ff]/75 to-[#f7f7ff]/15" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#f7f7ff] via-[#f7f7ff]/25 to-[#f7f7ff]/1" />
 
       <div className="hero-fade-up relative mx-auto flex min-h-[620px] w-11/12 max-w-7xl items-center px-0 py-14 sm:min-h-[680px] sm:py-20">
         <div className="max-w-2xl">

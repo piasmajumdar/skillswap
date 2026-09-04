@@ -236,7 +236,7 @@ const UserProfileRightNav = () => {
                             textValue="Profile"
                         >
                             <Link
-                                href="/profile"
+                                href={`/dashboard/${role}/profile`}
                                 className="flex w-full items-center gap-3"
                             >
                                 <Person className="size-4" />

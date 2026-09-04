@@ -11,6 +11,7 @@ import {
   FiStar,
 } from "react-icons/fi";
 import { clientApi } from "../../dashboard/components/clientApi";
+import MarketplaceSkeleton from "../../components/MarketplaceSkeleton";
 
 const PAGE_LIMIT = 9;
 
@@ -31,16 +32,6 @@ function Stars({ rating }) {
             star <= Number(rating) ? "fill-amber-400" : "text-slate-200"
           }
         />
-      ))}
-    </div>
-  );
-}
-
-function FreelancersSkeleton() {
-  return (
-    <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-      {[1, 2, 3, 4, 5, 6].map((item) => (
-        <div key={item} className="h-80 animate-pulse rounded-2xl bg-white" />
       ))}
     </div>
   );
@@ -133,7 +124,7 @@ export default function FreelancersPage() {
 
       <div className="mt-8">
         {loading ? (
-          <FreelancersSkeleton />
+          <MarketplaceSkeleton variant="page" />
         ) : (
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {freelancers.map((freelancer) => (

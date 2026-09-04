@@ -10,6 +10,7 @@ import {
 } from "react-icons/fi";
 import { authClient } from "@/lib/auth-client";
 import { clientApi, withEmail } from "../../dashboard/components/clientApi";
+import MarketplaceSkeleton from "../../components/MarketplaceSkeleton";
 
 const PAGE_LIMIT = 9;
 const categories = [
@@ -36,16 +37,6 @@ const formatDate = (value) => {
     new Date(value),
   );
 };
-
-function TasksSkeleton() {
-  return (
-    <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
-        <div key={item} className="h-64 animate-pulse rounded-2xl bg-white" />
-      ))}
-    </div>
-  );
-}
 
 export default function PublicTasksPage() {
   const { data: session } = authClient.useSession();
@@ -208,7 +199,7 @@ export default function PublicTasksPage() {
 
         <section>
           {loading ? (
-            <TasksSkeleton />
+            <MarketplaceSkeleton variant="page" />
           ) : (
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {tasks.map((task) => (

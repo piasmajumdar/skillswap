@@ -15,6 +15,8 @@ import { toast } from "react-toastify";
 import { authClient } from "@/lib/auth-client";
 import { clientApi } from "../../../dashboard/components/clientApi";
 import { IoTime } from "react-icons/io5";
+import MarketplaceNotFound from "../../../components/MarketplaceNotFound";
+import MarketplaceSkeleton from "../../../components/MarketplaceSkeleton";
 
 export default function PublicTaskDetailsPage() {
   const { id } = useParams();
@@ -22,6 +24,7 @@ export default function PublicTaskDetailsPage() {
   const { data: session } = authClient.useSession();
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
+  const [notFound, setNotFound] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -33,7 +36,10 @@ export default function PublicTaskDetailsPage() {
         encodeURIComponent(session?.user?.email || ""),
     )
       .then(setData)
-      .catch((e) => setError(e.message));
+      .catch((e) => {
+        setNotFound(e.message.toLowerCase().includes("not found"));
+        setError(e.message);
+      });
   }, [id, session?.user?.email]);
 
   async function submit(event) {
@@ -69,15 +75,20 @@ export default function PublicTaskDetailsPage() {
     }
   }
 
-  if (!data) {
+  if (!data && !error) {
     return (
       <main className="mx-auto w-11/12 max-w-7xl py-10">
-        <div className="rounded-2xl bg-white p-8 text-slate-500">
-          Loading task...
-        </div>
+        <MarketplaceSkeleton variant="detail" />
       </main>
     );
   }
+  if (notFound) return <MarketplaceNotFound type="task" />;
+  if (!data)
+    return (
+      <p className="mx-auto max-w-5xl rounded-xl bg-rose-50 p-4 text-sm text-rose-700">
+        {error || "Unable to load this task."}
+      </p>
+    );
 
   const isFreelancer = session?.user?.role?.toLowerCase() === "freelancer";
   const canSubmit =

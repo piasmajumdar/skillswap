@@ -12,6 +12,8 @@ import {
   FiStar,
 } from "react-icons/fi";
 import { clientApi } from "../../../dashboard/components/clientApi";
+import MarketplaceNotFound from "../../../components/MarketplaceNotFound";
+import MarketplaceSkeleton from "../../../components/MarketplaceSkeleton";
 
 const formatDate = (value) =>
   value
@@ -39,30 +41,26 @@ function Stars({ rating, large = false }) {
   );
 }
 
-function DetailSkeleton() {
-  return (
-    <div className="mx-auto max-w-5xl space-y-6">
-      <div className="h-72 animate-pulse rounded-3xl bg-white" />
-      <div className="h-56 animate-pulse rounded-3xl bg-white" />
-    </div>
-  );
-}
-
 export default function FreelancerDetailsPage() {
   const params = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (!params.id) return;
     clientApi("/api/freelancers/" + encodeURIComponent(params.id))
       .then(setData)
-      .catch((requestError) => setError(requestError.message))
+      .catch((requestError) => {
+        setNotFound(requestError.message.toLowerCase().includes("not found"));
+        setError(requestError.message);
+      })
       .finally(() => setLoading(false));
   }, [params.id]);
 
-  if (loading) return <DetailSkeleton />;
+  if (loading) return <MarketplaceSkeleton variant="detail" />;
+  if (notFound) return <MarketplaceNotFound type="freelancer" />;
   if (error || !data?.freelancer)
     return (
       <p className="mx-auto max-w-5xl rounded-xl bg-rose-50 p-4 text-sm text-rose-700">

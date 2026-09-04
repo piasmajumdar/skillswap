@@ -70,9 +70,8 @@ const LoginPage = () => {
 
                 if (account.isBlocked) {
                     await authClient.signOut();
-                    toast.error(
-                        "This account has been blocked. Please contact support.",
-                    );
+                    router.replace("/auth/blocked");
+                    router.refresh();
                     return;
                 }
 

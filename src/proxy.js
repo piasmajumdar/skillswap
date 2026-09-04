@@ -21,14 +21,18 @@ export async function proxy(request) {
     */
 
     if (!session) {
-        return NextResponse.redirect(
-            new URL("/auth/login", request.url)
-        );
+        if (pathname.startsWith("/dashboard")) {
+            return NextResponse.redirect(
+                new URL("/auth/login", request.url)
+            );
+        }
+
+        return NextResponse.next();
     }
 
-    if (session.user?.isBlocked) {
+    if (session.user?.isBlocked && pathname !== "/auth/blocked") {
         return NextResponse.redirect(
-            new URL("/auth/login?blocked=1", request.url)
+            new URL("/auth/blocked", request.url)
         );
     }
 
@@ -128,5 +132,5 @@ export async function proxy(request) {
 }
 
 export const config = {
-    matcher: ["/dashboard/:path*"],
+    matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

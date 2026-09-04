@@ -240,6 +240,18 @@ export default function MyTasksPage() {
                   </div>
                 )}
               </Link>
+              {task.status === "completed" && (
+                <Link
+                  href={`/dashboard/client/my-tasks/${task._id}/review`}
+                  className={`mt-4 inline-flex cursor-pointer rounded-lg px-3 py-2 text-sm font-semibold ${
+                    task.hasReview
+                      ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
+                      : "bg-emerald-600 text-white hover:bg-emerald-700"
+                  }`}
+                >
+                  {task.hasReview ? "Reviewed" : "Give Review"}
+                </Link>
+              )}
             </article>
           ),
         )}

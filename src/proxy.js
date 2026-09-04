@@ -26,6 +26,12 @@ export async function proxy(request) {
         );
     }
 
+    if (session.user?.isBlocked) {
+        return NextResponse.redirect(
+            new URL("/auth/login?blocked=1", request.url)
+        );
+    }
+
     /*
     |--------------------------------------------------------------------------
     | User Role

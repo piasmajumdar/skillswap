@@ -24,6 +24,7 @@ import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-toastify";
 
 import { authClient } from "@/lib/auth-client";
+import { clientApi, withEmail } from "@/app/dashboard/components/clientApi";
 
 const LoginPage = () => {
     const router = useRouter();
@@ -62,9 +63,20 @@ const LoginPage = () => {
             }
 
             if (data) {
-                console.log(data.user.role)
+                const account = await clientApi(
+                    "/api/auth/account-status?email=" +
+                    withEmail(data.user.email),
+                );
+
+                if (account.isBlocked) {
+                    await authClient.signOut();
+                    toast.error(
+                        "This account has been blocked. Please contact support.",
+                    );
+                    return;
+                }
+
                 toast.success("Signed in successfully!");
-                console.log(data);
                 if (data.user.role === "freelancer") {
                     router.push("/dashboard/freelancer");
                 }

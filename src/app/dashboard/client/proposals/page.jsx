@@ -13,6 +13,7 @@ export default function ProposalsPage() {
   const [error, setError] = useState("");
   const [selectedAction, setSelectedAction] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
+  const [filter, setFilter] = useState("pending");
   const load = () =>
     session?.user?.email &&
     clientApi(`/api/client/proposals?email=${withEmail(session.user.email)}`)
@@ -58,6 +59,16 @@ export default function ProposalsPage() {
       setError(e.message);
     }
   }
+  const counts = {
+    pending: rows.filter((row) => row.status === "pending").length,
+    accepted: rows.filter((row) => row.status === "accepted").length,
+    rejected: rows.filter((row) => row.status === "rejected").length,
+    all: rows.length,
+  };
+  const visibleRows = rows.filter((row) => {
+    if (filter === "all") return true;
+    return row.status === filter;
+  });
   return (
     <section className="space-y-5">
       <div>
@@ -71,8 +82,30 @@ export default function ProposalsPage() {
           {error}
         </p>
       )}
+      <div className="grid grid-cols-2 gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm sm:grid-cols-4 sm:gap-3">
+        {[
+          ["pending", "Pending"],
+          ["accepted", "Accepted"],
+          ["rejected", "Rejected"],
+          ["all", "All"],
+        ].map(([value, text]) => (
+          <button
+            key={value}
+            type="button"
+            onClick={() => setFilter(value)}
+            className={
+              "cursor-pointer rounded-xl px-3 py-3 text-center text-sm font-semibold transition " +
+              (filter === value
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "text-slate-600 hover:bg-indigo-50 hover:text-indigo-700")
+            }
+          >
+            {text} ({counts[value]})
+          </button>
+        ))}
+      </div>
       <div className="grid gap-4">
-        {rows.map((row) => (
+        {visibleRows.map((row) => (
           <article
             key={row._id}
             className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
@@ -126,9 +159,11 @@ export default function ProposalsPage() {
             </div>
           </article>
         ))}
-        {!rows.length && (
+        {!visibleRows.length && (
           <p className="rounded-2xl bg-white p-10 text-center text-slate-500">
-            No proposals found.
+            {rows.length
+              ? "No proposals match this status."
+              : "No proposals found."}
           </p>
         )}
       </div>

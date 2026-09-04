@@ -15,6 +15,7 @@ import {
   FiUsers,
   FiClipboard,
   FiCreditCard,
+  FiStar,
   FiUser,
   FiLogOut,
   FiMenu,
@@ -40,6 +41,7 @@ const navigation = {
     ["My Proposals", "/dashboard/freelancer/my-proposals", FiFileText],
     ["Active Projects", "/dashboard/freelancer/active-projects", FiClipboard],
     ["My Earnings", "/dashboard/freelancer/earnings", FiDollarSign],
+    ["Reviews", "/dashboard/freelancer/reviews", FiStar],
     ["Edit Profile", "/dashboard/freelancer/profile", FiUser],
   ],
 

@@ -55,12 +55,12 @@ export default function FreelancerDetailsPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!params.email) return;
-    clientApi("/api/freelancers/" + encodeURIComponent(params.email))
+    if (!params.id) return;
+    clientApi("/api/freelancers/" + encodeURIComponent(params.id))
       .then(setData)
       .catch((requestError) => setError(requestError.message))
       .finally(() => setLoading(false));
-  }, [params.email]);
+  }, [params.id]);
 
   if (loading) return <DetailSkeleton />;
   if (error || !data?.freelancer)

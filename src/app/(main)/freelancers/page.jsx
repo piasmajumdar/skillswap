@@ -189,7 +189,7 @@ export default function FreelancersPage() {
                     ))}
                 </div>
                 <Link
-                  href={`/freelancers/${encodeURIComponent(freelancer.email)}`}
+                  href={`/freelancers/${freelancer._id}`}
                   className="mt-6 inline-flex w-full cursor-pointer items-center justify-center rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700"
                 >
                   View Details

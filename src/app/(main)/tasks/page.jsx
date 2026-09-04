@@ -160,7 +160,8 @@ export default function PublicTasksPage() {
           >
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
-            <option value="price">Price</option>
+            <option value="price_high">Price: High to Low</option>
+            <option value="price_low">Price: Low to High</option>
           </select>
           <FiChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
         </label>
@@ -252,18 +253,18 @@ export default function PublicTasksPage() {
 
       {!loading && pagination.totalPages > 0 && (
         <nav
-          className="mt-10 flex items-center justify-center gap-4"
+          className="mt-10 flex w-full flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4"
           aria-label="Task pagination"
         >
           <button
             type="button"
             onClick={() => setPage((current) => Math.max(current - 1, 1))}
             disabled={page === 1}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-indigo-300 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-indigo-300 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
           >
             <FiChevronLeft /> Previous
           </button>
-          <div className="flex items-center gap-2">
+          <div className="flex max-w-full flex-wrap items-center justify-center gap-2 px-1">
             {Array.from(
               { length: pagination.totalPages },
               (_, index) => index + 1,
@@ -290,7 +291,7 @@ export default function PublicTasksPage() {
               setPage((current) => Math.min(current + 1, pagination.totalPages))
             }
             disabled={page === pagination.totalPages}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-indigo-300 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-indigo-300 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
           >
             Next <FiChevronRight />
           </button>

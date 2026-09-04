@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FiChevronLeft, FiChevronRight, FiSearch } from "react-icons/fi";
+import {
+  FiChevronDown,
+  FiChevronLeft,
+  FiChevronRight,
+  FiSearch,
+} from "react-icons/fi";
 import { authClient } from "@/lib/auth-client";
 import { clientApi, withEmail } from "../../dashboard/components/clientApi";
 
@@ -15,6 +20,15 @@ const categories = [
   "marketing",
   "other",
 ];
+
+const categoryLabels = {
+  all: "All Categories",
+  design: "Design",
+  writing: "Writing",
+  development: "Development",
+  marketing: "Marketing",
+  other: "Other",
+};
 
 const formatDate = (value) => {
   if (!value) return "-";
@@ -38,6 +52,7 @@ export default function PublicTasksPage() {
   const [tasks, setTasks] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
+  const [sort, setSort] = useState("newest");
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -56,6 +71,7 @@ export default function PublicTasksPage() {
       });
       if (search.trim()) params.set("search", search.trim());
       if (category !== "all") params.set("category", category);
+      params.set("sort", sort);
       if (session?.user?.email)
         params.set("email", withEmail(session.user.email));
 
@@ -77,7 +93,7 @@ export default function PublicTasksPage() {
     }, 150);
 
     return () => clearTimeout(loadTimer);
-  }, [category, page, search, session?.user?.email]);
+  }, [category, page, search, session?.user?.email, sort]);
 
   const handleSearch = (event) => {
     setSearch(event.target.value);
@@ -86,6 +102,11 @@ export default function PublicTasksPage() {
 
   const handleCategory = (event) => {
     setCategory(event.target.value);
+    setPage(1);
+  };
+
+  const handleSort = (event) => {
+    setSort(event.target.value);
     setPage(1);
   };
 
@@ -104,7 +125,7 @@ export default function PublicTasksPage() {
         </p>
       </div>
 
-      <section className="mx-auto mt-10 grid max-w-4xl gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:grid-cols-[1fr_220px]">
+      <section className="mx-auto mt-10 grid max-w-5xl gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:grid-cols-[minmax(0,1fr)_220px_180px]">
         <label className="relative block">
           <span className="sr-only">Search tasks by title</span>
           <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -130,6 +151,19 @@ export default function PublicTasksPage() {
             ))}
           </select>
         </label>
+        <label className="relative block">
+          <span className="sr-only">Sort tasks</span>
+          <select
+            value={sort}
+            onChange={handleSort}
+            className="w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white px-4 py-3 pr-9 text-sm text-slate-700 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+          >
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="price">Price</option>
+          </select>
+          <FiChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        </label>
       </section>
 
       {error && (
@@ -138,40 +172,76 @@ export default function PublicTasksPage() {
         </p>
       )}
 
-      <div className="mt-10">
-        {loading ? (
-          <TasksSkeleton />
-        ) : (
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {tasks.map((task) => (
-              <Link
-                key={task._id}
-                href={"/tasks/" + task._id}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-indigo-200 hover:shadow-md"
+      <div className="mt-10 grid gap-8 md:grid-cols-[190px_minmax(0,1fr)] lg:grid-cols-[220px_minmax(0,1fr)]">
+        <aside className="hidden md:block">
+          <h2 className="mb-4 text-sm font-bold text-slate-900">Categories</h2>
+          <div className="space-y-1">
+            {categories.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => {
+                  setCategory(item);
+                  setPage(1);
+                }}
+                className={
+                  "flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm capitalize transition " +
+                  (category === item
+                    ? "bg-indigo-50 font-semibold text-indigo-700"
+                    : "text-slate-600 hover:bg-white hover:text-slate-900")
+                }
               >
-                <div className="flex items-start justify-between gap-3">
-                  <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold capitalize text-indigo-700">
-                    {task.category}
-                  </span>
-                  <span className="text-lg font-bold text-slate-900">
-                    {"$"}
-                    {task.budget}
-                  </span>
-                </div>
-                <h2 className="mt-5 text-xl font-bold text-slate-900">
-                  {task.title}
-                </h2>
-                <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-500">
-                  {task.description}
-                </p>
-                <div className="mt-6 flex flex-wrap justify-between gap-2 text-xs text-slate-500">
-                  <span>Client: {task.client?.name || task.client_email}</span>
-                  <span>Due {formatDate(task.deadline)}</span>
-                </div>
-              </Link>
+                <span
+                  className={
+                    "h-3 w-3 rounded-full border-2 " +
+                    (category === item
+                      ? "border-indigo-600 bg-indigo-600"
+                      : "border-slate-400")
+                  }
+                />
+                {categoryLabels[item]}
+              </button>
             ))}
           </div>
-        )}
+        </aside>
+
+        <section>
+          {loading ? (
+            <TasksSkeleton />
+          ) : (
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {tasks.map((task) => (
+                <Link
+                  key={task._id}
+                  href={"/tasks/" + task._id}
+                  className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-indigo-200 hover:shadow-md"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold capitalize text-indigo-700">
+                      {task.category}
+                    </span>
+                    <span className="text-lg font-bold text-slate-900">
+                      {"$"}
+                      {task.budget}
+                    </span>
+                  </div>
+                  <h2 className="mt-5 text-xl font-bold text-slate-900">
+                    {task.title}
+                  </h2>
+                  <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-500">
+                    {task.description}
+                  </p>
+                  <div className="mt-6 flex flex-wrap justify-between gap-2 text-xs text-slate-500">
+                    <span>
+                      Client: {task.client?.name || task.client_email}
+                    </span>
+                    <span>Due {formatDate(task.deadline)}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
 
       {!loading && !tasks.length && !error && (

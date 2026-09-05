@@ -1,8 +1,4 @@
-const API_URL =
-  process.env.NEXT_PUBLIC_BACKEND_SERVER_URL?.trim() ||
-  (process.env.NODE_ENV === "development"
-    ? "http://localhost:8000"
-    : "https://skillswap-server-ivory.vercel.app");
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_SERVER_URL
 
 export async function clientApi(path, options = {}) {
   const response = await fetch(`${API_URL.replace(/\/$/, "")}${path}`, {

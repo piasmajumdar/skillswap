@@ -23,6 +23,7 @@ import {
 } from "@gravity-ui/icons";
 
 import { FcGoogle } from "react-icons/fc";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import { toast } from "react-toastify";
 
 import { authClient } from "@/lib/auth-client";
@@ -35,6 +36,7 @@ const SignupPage = () => {
 
     const [role, setRole] = useState("client");
     const [terms, setTerms] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     // ============================================================
     // Email Signup
@@ -517,7 +519,7 @@ const SignupPage = () => {
                                 <TextField
                                     isRequired
                                     name="password"
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     validate={(value) => {
                                         if (value.length < 6) {
                                             return "Password must be at least 6 characters";
@@ -545,6 +547,17 @@ const SignupPage = () => {
                                                 size={17}
                                                 className="text-slate-400"
                                             />
+                                        }
+                                        endContent={
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword((visible) => !visible)}
+                                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                                aria-pressed={showPassword}
+                                                className="rounded p-1 text-slate-400 transition hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:hover:text-slate-200"
+                                            >
+                                                {showPassword ? <FiEyeOff size={17} /> : <FiEye size={17} />}
+                                            </button>
                                         }
                                         className="h-11"
                                     />

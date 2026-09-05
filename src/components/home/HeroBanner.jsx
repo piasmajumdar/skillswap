@@ -5,9 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FiArrowRight, FiCreditCard, FiFileText, FiUsers } from "react-icons/fi";
 import { authClient } from "@/lib/auth-client";
-
-const API_URL =
-  process.env.NEXT_PUBLIC_BACKEND_SERVER_URL || "http://localhost:8000";
+import { clientApi } from "@/app/dashboard/components/clientApi";
 
 const initialStats = {
   totalPosts: 0,
@@ -33,12 +31,7 @@ export default function HeroBanner() {
 
     async function loadStats() {
       try {
-        const response = await fetch(`${API_URL}/api/public/stats`);
-        if (!response.ok) {
-          throw new Error("Unable to load platform statistics.");
-        }
-
-        const data = await response.json();
+        const data = await clientApi("/api/public/stats");
         if (isMounted) {
           setPlatformStats({
             totalPosts: Number(data.totalPosts || 0),
